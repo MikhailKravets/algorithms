@@ -11,6 +11,10 @@ def bob(question: str) -> str:
     return "Whatever"
 
 
+def bbb():
+    pass
+
+
 if __name__ == '__main__':
     res = bob("......")
     print(res)
