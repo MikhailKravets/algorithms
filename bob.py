@@ -12,7 +12,8 @@ def bob(question: str) -> str:
 
 
 def bbb():
-    pass
+    """Hello World"""
+    return {'is_auth': True}
 
 
 if __name__ == '__main__':
