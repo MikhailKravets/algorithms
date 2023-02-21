@@ -12,7 +12,7 @@ def bob(question: str) -> str:
 
 
 def bbb():
-    pass
+    "fhrefeuuy"
 
 
 if __name__ == '__main__':
