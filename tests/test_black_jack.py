@@ -1,6 +1,6 @@
 from collections import Counter
 
-from black_jack import Deck
+from cards.deck import Deck
 
 
 def test_deck_creation():

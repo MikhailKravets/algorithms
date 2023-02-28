@@ -1,0 +1,59 @@
+@startuml
+
+title Initialize Pocker Game
+
+actor player1
+actor player2
+actor player3
+
+actor Game
+
+participant Deck
+participant Table
+participant Player
+participant Combination
+
+Game -> Deck: Shuffle new deck
+Deck -> Game: Deck is shuffled
+
+loop Create 3 player instances
+    Game -> Player: Create new player
+    Player -> Game: Player is created
+end
+
+Game -> Table: Create new Table with players
+Table -> Game: Initial table is created
+
+Table -> Table: Decide who is dealer
+
+loop Round
+    loop For 3 players
+        Table -> Player: Assign two cards from top to player
+        Player -> Table: Cards assigned
+    end
+
+    Table -> Player: Take small blind sum from player
+    Player -> Table: Small blind sum is sent to bank
+
+    Table -> Player: Take big blind sum from player
+    Player -> Table: Big blind sum is sent to bank
+
+    loop For each player
+        Player -> Table: Next player makes a bid
+        Table -> Player: Bid is accepted. Next player
+    end
+
+    Table -> Deck: Take either 3 or 1 card from Deck (until 5 cards on the table)
+    Deck -> Table: Cards returned
+
+    loop Each player
+        Table -> Player: Gather cards from table and hand
+        Player -> Table: Cards shown
+        Table -> Combination: Calculate hand strength
+        Combination -> Table: Hand strength calculated
+    end
+
+    Table -> Table: Give bank to player with strongest hand.
+end
+
+@enduml
