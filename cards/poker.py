@@ -1,3 +1,5 @@
+import collections
+
 from cards.deck import Card, Deck
 
 PLAYER = 3
@@ -78,10 +80,77 @@ class Table:
 
 class Combination:
 
-    def __init__(self, cards: list[Card]):  # 7 cards. 5 from table and 2 from player
+    def __init__(self):  # 7 cards. 5 from table and 2 from player
         # TODO: implement a case when you can pass less than 7 cards.
         #       A case when we calculate combinations in the mid-game
-        self.score = 0
+        pass
+
+    @staticmethod
+    def score(cards: list[Card]):  # 7D 7H 7C    7S 2D
+        # TODO: 1. Go through highest to lowest combinations
+        #   2. Each combination should return score
+        #   3. Return score
+        if score := Combination.royal_flush(cards) != 0:
+            return score
+        if score := Combination.straight_flush(cards) != 0:
+            return score
+        if score := Combination.four_of_a_kind(cards) != 0:
+            return score
+
+    @staticmethod
+    def royal_flush(cards: list[Card]) -> int:
+        # 10 J Q K A  - the same suit
+        tmp = ("10", "J", "Q", "K", "A")
+
+        if len(cards) < len(tmp):
+            return 0
+
+        c_name = [v.name for v in cards]
+        c_full = []
+        for v in tmp:
+            if v in c_name:
+                idx = c_name.index(v)
+                c_full.append(cards[idx])
+
+        c = collections.Counter([v.suit for v in c_full])
+
+        if len(c) == 1:
+            return 100
+
+        return 0
+
+    @staticmethod
+    def straight_flush(cards: list[Card]) -> int:
+        return 0
+
+    @staticmethod
+    def four_of_a_kind(cards: list[Card]) -> int:
+        counter = collections.Counter([v.name for v in cards])
+        for v in counter.values():
+            if v == 4:
+                return 40
+        return 0
+
+    def full_house(self, cards: list[Card]) -> int:
+        pass
+
+    def flush(self, cards: list[Card]) -> int:
+        pass
+
+    def straight(self, cards: list[Card]) -> int:
+        pass
+
+    def three_of_a_kind(self, cards: list[Card]) -> int:
+        pass
+
+    def two_pair(self, cards: list[Card]) -> int:
+        pass
+
+    def pair(self, cards: list[Card]) -> int:
+        pass
+
+    def high_card(self, cards: list[Card]) -> int:
+        pass
 
 
 if __name__ == '__main__':
