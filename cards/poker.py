@@ -81,12 +81,10 @@ class Table:
 class Combination:
 
     def __init__(self):  # 7 cards. 5 from table and 2 from player
-        # TODO: implement a case when you can pass less than 7 cards.
-        #       A case when we calculate combinations in the mid-game
         pass
 
     @staticmethod
-    def score(cards: list[Card]):  # 7D 7H 7C    7S 2D
+    def score(cards: list[Card]):
         # TODO: 1. Go through highest to lowest combinations
         #   2. Each combination should return score
         #   3. Return score
@@ -120,7 +118,32 @@ class Combination:
         return 0
 
     @staticmethod
-    def straight_flush(cards: list[Card]) -> int:
+    def straight_flush(cards: list[Card]) -> int:   # 4D 5D 6D 8C 10D    7D 8D
+        c = collections.Counter([v.suit for v in cards])
+
+        flush_suit = None
+        for suit, count in c.items():
+            if count >= 5:
+                flush_suit = suit
+
+        if not flush_suit:
+            return 0
+
+        # TODO: 4D 5D 6D 7D 8D 10D
+
+        # 4 5 6 7 8 10
+        ranks = sorted([v.value for v in cards if v.suit == flush_suit])
+
+        stride = 1
+        sequence = 1
+        for i in range(len(ranks) - 1):
+            if sequence >= 4:
+                return 90
+
+            if ranks[i + 1] - ranks[i] == stride:
+                sequence += 1
+            else:
+                sequence = 1
         return 0
 
     @staticmethod
