@@ -151,17 +151,47 @@ class Combination:
         counter = collections.Counter([v.name for v in cards])
         for v in counter.values():
             if v == 4:
-                return 40
+                return 80
         return 0
 
-    def full_house(self, cards: list[Card]) -> int:
-        pass
+    @staticmethod
+    def full_house(cards: list[Card]) -> int:   # KD KH KS 8C 10D    7D 8D
+        counter = collections.Counter([v.name for v in cards])
+        values = counter.values()
 
-    def flush(self, cards: list[Card]) -> int:
-        pass
+        # TODO: players may have different full house combinations.
+        #   We must ensure that the user with the highest full house
+        #   combination wins the game.
+        #   So, we should also check the value of the card itself.
 
-    def straight(self, cards: list[Card]) -> int:
-        pass
+        if 3 in values and 2 in values:
+            return 70
+        return 0
+
+    @staticmethod
+    def flush(cards: list[Card]) -> int:   # KD 2D 5D 8C 8H    7S 8D
+        counter = collections.Counter([v.suit for v in cards])
+        values = counter.values()
+
+        if any(v >= 4 for v in values):
+            return 60
+        return 0
+
+    @staticmethod
+    def straight(cards: list[Card]) -> int:   # 4D 5S 6H 8C 10D    7D 8D
+        ranks = sorted([v.value for v in cards])
+
+        stride = 1
+        sequence = 1
+        for i in range(len(ranks) - 1):
+            if sequence >= 4:
+                return 50
+
+            if ranks[i + 1] - ranks[i] == stride:
+                sequence += 1
+            else:
+                sequence = 1
+        return 0
 
     def three_of_a_kind(self, cards: list[Card]) -> int:
         pass
