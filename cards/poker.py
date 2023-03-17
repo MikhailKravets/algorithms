@@ -27,7 +27,7 @@ class Player:
     def __init__(self, name: str, initial_bank: int):
         self.name = name
         self.bank: int = initial_bank
-        self.hand: tuple[Card, Card]
+        self.hand: list[Card, Card] | None = None
 
         self.is_dealer = False
 
@@ -42,6 +42,9 @@ class Player:
 
     def raise_(self):
         pass
+
+    def set_hand(self, cards):
+        self.hand = cards
 
     def __str__(self):
         return f"Player {self.name}. Bank {self.bank}"
@@ -61,6 +64,9 @@ class Table:
         self.new_round()
         self._current_dealer_idx = 0
 
+        # TODO: think how to increment the value!
+        self._current_player_idx = (self._current_dealer_idx + 3) % len(self.players)
+
     @property
     def dealer(self) -> Player:
         return self.players[self._current_dealer_idx]
@@ -76,6 +82,9 @@ class Table:
     def new_round(self):
         assert self.bank == 0, "Bank must be 0 before new round"
         self.deck = Deck()
+
+    def get_cards(self, amount: int = 1) -> list[Card]:
+        return [self.deck.pop() for _ in range(amount)]
 
 
 class Combination:
@@ -231,3 +240,7 @@ if __name__ == '__main__':
     p3 = Player("Kirill", 100)
 
     table = Table([p1, p2, p3], small_blind=2)  # 2 / 4
+
+    p1.set_hand(table.get_cards(2))
+    p2.set_hand(table.get_cards(2))
+    p3.set_hand(table.get_cards(2))

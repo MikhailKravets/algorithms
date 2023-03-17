@@ -52,5 +52,8 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.cards)
 
+    def pop(self) -> Card:
+        return self.cards.pop()
+
     def __len__(self):
         return len(self.cards)
