@@ -193,17 +193,36 @@ class Combination:
                 sequence = 1
         return 0
 
-    def three_of_a_kind(self, cards: list[Card]) -> int:
-        pass
+    @staticmethod
+    def three_of_a_kind(cards: list[Card]) -> int:   # 4D 8S 6H 8C 10D    7D 8D
+        counter = collections.Counter([v.name for v in cards])
+        v = counter.values()
+        if 3 in v:
+            return 40
+        return 0
 
-    def two_pair(self, cards: list[Card]) -> int:
-        pass
+    @staticmethod
+    def two_pair(cards: list[Card]) -> int:   # 4D 7S 6H 8C 10D    7D 8D
+        counter = collections.Counter([v.name for v in cards])
 
-    def pair(self, cards: list[Card]) -> int:
-        pass
+        i = 0
+        for v in counter.values():
+            if v == 2:
+                i += 1
+            if i == 2:
+                return 30
+        return 0
 
-    def high_card(self, cards: list[Card]) -> int:
-        pass
+    @staticmethod
+    def pair(cards: list[Card]) -> int:  # 4D 2S 6H 8C 10D    7D 8D
+        counter = collections.Counter([v.name for v in cards])
+        if 2 in counter.values():
+            return 20
+        return 0
+
+    @staticmethod
+    def high_card(cards: list[Card]) -> int:
+        return max([v.value for v in cards])
 
 
 if __name__ == '__main__':
