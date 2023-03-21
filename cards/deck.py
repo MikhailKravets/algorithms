@@ -14,6 +14,9 @@ class Card:
     def special_value(self):
         return 1
 
+    def __repr__(self):
+        return f"{self.name} {self.suit.name} - v:{self.value}"
+
 
 class Suits(enum.Enum):
     DIAMOND = "Diamond"

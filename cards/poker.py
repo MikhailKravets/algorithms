@@ -1,4 +1,5 @@
 import collections
+from functools import partial
 
 from cards.deck import Card, Deck
 
@@ -31,17 +32,18 @@ class Player:
 
         self.is_dealer = False
 
-    def check(self):
-        pass
+    def fold(self) -> None:
+        self.hand = None
 
-    def fold(self):
-        pass
+    def raise_call(self, bet: int):
+        res = self.bank - bet
+        if res > 0:
+            self.bank -= bet
+            return bet
 
-    def call(self):
-        pass
-
-    def raise_(self):
-        pass
+        res = self.bank
+        self.bank = 0
+        return res
 
     def set_hand(self, cards):
         self.hand = cards
@@ -54,6 +56,9 @@ class Table:
 
     def __init__(self, player: list[Player], small_blind: int = 2):
         self.deck = Deck()
+
+        # TODO: what to do with player when he folded cards???
+        # TODO: how to define the end of the round?
         self.players = player
 
         self.bank = 0
@@ -61,7 +66,6 @@ class Table:
         self.small_blind_sum = small_blind
         self.big_bling_sum = small_blind * 2
 
-        self.new_round()
         self._current_dealer_idx = 0
 
         # TODO: think how to increment the value!
@@ -70,6 +74,10 @@ class Table:
     @property
     def dealer(self) -> Player:
         return self.players[self._current_dealer_idx]
+
+    @property
+    def current_player(self) -> Player:
+        return self.players[self._current_player_idx]
 
     @property
     def small_blind(self) -> Player:
@@ -83,8 +91,15 @@ class Table:
         assert self.bank == 0, "Bank must be 0 before new round"
         self.deck = Deck()
 
+        self.small_blind.bank -= self.small_blind_sum
+        self.big_blind.bank -= self.big_bling_sum
+
     def get_cards(self, amount: int = 1) -> list[Card]:
         return [self.deck.pop() for _ in range(amount)]
+
+    def bet(self, strategy):
+        strategy()
+        self._current_player_idx += (self._current_dealer_idx + 1) % len(self.players)
 
 
 class Combination:
@@ -240,7 +255,11 @@ if __name__ == '__main__':
     p3 = Player("Kirill", 100)
 
     table = Table([p1, p2, p3], small_blind=2)  # 2 / 4
+    table.new_round()
 
     p1.set_hand(table.get_cards(2))
     p2.set_hand(table.get_cards(2))
     p3.set_hand(table.get_cards(2))
+
+    for _ in range(4):
+        bet = partial(table.current_player.raise_call, bet=6)  # partial(current_player.fold)
